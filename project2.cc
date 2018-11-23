@@ -13,13 +13,19 @@ class node{
             down = NULL;
             left = NULL;
             right = NULL;
+            back = NULL;
+            fin = FALSE;
+            in = FALSE;
         }
         node(int in){
             num = in;
             up = NULL;
             down = NULL;
             left = NULL;
-            right = NULL;        
+            right = NULL;
+            back = NULL;
+            fin = FALSE;
+            in = FALSE;        
         }
         int print_row(){
             return row;
@@ -33,6 +39,9 @@ class node{
         node *down;
         node *left;
         node *right;
+        node *back;
+        bool fin;
+        bool in;
 };
 class store{
     public:
