@@ -9,6 +9,7 @@ class node{
     public:
         node(){
             num = 0;
+            step = 1073741824;
             up = NULL;
             down = NULL;
             left = NULL;
@@ -16,16 +17,19 @@ class node{
             back = NULL;
             fin = FALSE;
             in = FALSE;
+            end = FALSE;
         }
         node(int in){
             num = in;
+            step = 1073741824;
             up = NULL;
             down = NULL;
             left = NULL;
             right = NULL;
             back = NULL;
             fin = FALSE;
-            in = FALSE;        
+            in = FALSE;
+            end = FALSE;      
         }
         int print_row(){
             return row;
@@ -35,6 +39,7 @@ class node{
         }
     private:
         int num;
+        int step;
         node *up;
         node *down;
         node *left;
@@ -42,6 +47,7 @@ class node{
         node *back;
         bool fin;
         bool in;
+        bool end;
 };
 class store{
     public:
@@ -72,8 +78,9 @@ int main(int argc, char* argv[]){
     node* leftNode;
     node* newNode;
     node* rootNode;
-    node* preNode;
     char leftTypeIn;
+    bool end;
+    int outCount;
     //int input[2][1001];
     int num=0;
     
@@ -123,52 +130,90 @@ int main(int argc, char* argv[]){
 
         if(rootNode.up != NULL){
             myQueue.push(rootNode.up);
+            rootNode.up->in = TRUE;
+            rootNode.up->back = rootNode;
+            rootNode.up->down = NULL;
+            rootNode.up->step = 1;
         }else if(rootNode.down != NULL){
             myQueue.push(rootNode.down);
+            rootNode.down->in = TRUE;
+            rootNode.down->back = rootNode;
+            rootNode.down->up = NULL;
+            rootNode.down->step = 1;            
         }else if(rootNode.left != NULL){
             mwQueue.push(rootNode.left);
+            rootNode.left->in = TRUE;
+            rootNode.left->back = rootNode;
+            rootNode.left->right = NULL;
+            rootNode.left->step = 1; 
         }else if(rootNode.right != NULL){
             myQueue.push(rootNode.right);
+            rootNode.right->in = TRUE;
+            rootNode.right->back = rootNode;
+            rootNode.right->left = NULL;
+            rootNode.right->step = 1; 
         }
-        preNode = rootNode;
         rootNode.in = TRUE;
+        rootNode.step = 0;
 
         while(!myQueue.isEmpty()){
             node currNode = myQueue.front();
             myQueue.pop();
-            currNode.back = preNode;
+            end = TRUE;
             if(currNode.up != NULL){
                 if(currNode.up->in == FALSE){
                     myQueue.push(curuNode.up);
                     currNode.up->in = TRUE;
+                    currNode.up->back = currNode;
+                    currNode.up->down = NULL;
+                    currNode.up->step = currNode.step + 1;
+                    end = FALSE;
                 }else{
                     currNode.up->down = NULL;
                     currNode.up = NULL;
                 }   
-            }else if(currNode.down != NULL){
+            }
+            if(currNode.down != NULL){
                 if(currNode.down->in == FALSE){
                     myQueue.push(curuNode.down);
                     currNode.down->in = TRUE;
+                    currNode.down->back = currNode;
+                    currNode.down->up = NULL;
+                    currNode.down->step = currNode.step + 1;
+                    end = FALSE;
                 }else{
                     currNode.down->up = NULL;
                     currNode.down = NULL;
                 } 
-            }else if(currNode.left != NULL){
+            }
+            if(currNode.left != NULL){
                 if(currNode.left->in == FALSE){
                     myQueue.push(curuNode.left);
                     currNode.left->in = TRUE;
+                    currNode.left->back = currNode;
+                    currNode.left->right = NULL;
+                    currNode.left->step = currNode.step + 1;
+                    end = FALSE;
                 }else{
                     currNode.left->right = NULL;
                     currNode.left = NULL;
                 } 
-            }else if(currNode.right != NULL){
+            }
+            if(currNode.right != NULL){
                 if(currNode.right->in == FALSE){
                     myQueue.push(curuNode.right);
                     currNode.right->in = TRUE;
+                    currNode.right->back = currNode;
+                    currNode.right->left = NULL;
+                    currNode.right->step = currNode.step + 1;
+                    end = FALSE;
                 }else{
                     currNode.right->left = NULL;
                     currNode.right = NULL;
                 } 
+            }
+            if(end == TRUE){
+                currNode.end = TRUE;
             }
         }
 
