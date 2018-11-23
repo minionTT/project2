@@ -5,15 +5,21 @@
 
 using namespace std;
 
-class element{
+class node{
     public:
-        element(){
-            row = 0;
-            column = 0;
+        node(){
+            num = 0;
+            up = NULL;
+            down = NULL;
+            left = NULL;
+            right = NULL;
         }
-        element(int in1, int in2){
-            row = in1;
-            column = in2;
+        node(int in){
+            num = in;
+            up = NULL;
+            down = NULL;
+            left = NULL;
+            right = NULL;        
         }
         int print_row(){
             return row;
@@ -22,18 +28,21 @@ class element{
             return column;
         }
     private:
-        int row;
-        int column;
+        int num;
+        node *up;
+        node *down;
+        node *left;
+        node *right;
 };
 class store{
     public:
         store(){
-            val = 0;
-            peak = 1;
+            upNode = NULL;
+            type = '1';
         }
     public:
-        int val;
-        bool peak;
+        node* upNode;
+        char type;
 };
 
 int main(int argc, char* argv[]){
@@ -42,92 +51,70 @@ int main(int argc, char* argv[]){
     string outfilename = "./";
     infilename += argv[1];
     outfilename += argv[1];
-    infilename += "/matrix.data";
-    outfilename += "/final.peak";
+    infilename += "/floor.data";
+    outfilename += "/final.path";
     fstream infile (infilename);
     ofstream outfile (outfilename);
 
     int row,column;
     int i,j;
-    int tmpin;
+    char typeIn;
+    int bat;
+    node* leftNode;
+    node* newNode;
+    node* rootNode;
+    node* preNode;
+    char leftTypeIn;
     //int input[2][1001];
     int num=0;
     
-    queue <element> myqueue;
+    queue <node> myQueue;
     queue <element> secqueue;
 
     if(infile.is_open()){
-        infile >> row >> column;
-        store input[column+1];
+        infile >> row >> column >> bat;
+        store lastIn[column];
 
-        for(i=1; i<=row; i++){
-            for(j=1; j<=column; j++){
-                infile >> tmpin;
-                if(i==1){
-                    input[j].peak = 1;
-
-                    
-                }else{
-                    if(input[j].val >= tmpin){
-                        if(input[j].peak == 1 ) {
-                            element* in = (element*) new element(i-1,j);
-                            myqueue.push( *in);
-                            num++;
-                        
-                        }
-                        
+        for(i=0; i<row; i++){                                      //read in data
+            for(j=0; j<column; j++){
+                infile >> typeIn;
+                if(typeIn == '0' || typeIn == 'R'){
+                    newNode = new node(i*column + j);
+                    lastIn[j].upNode = newNode;
+                    if(leftTypeIn == '0' || leftTypeIn == 'R'){
+                        leftNode->right = newNode;
+                        newNode->left = leftNode;
                     }
-                    if(input[j].val > tmpin){
-                        input[j].peak = 0;
+                    leftNode = newNode;
+                    if(typeIn == 'R'){
+                        rootNode = newNode;
+                    }
+                    if(i == 0){
+                        lastIn[j].upNode = newNode;
+                        lastIn[j].type = typeIn;
                     }else{
-                        input[j].peak = 1;
-                    }
-                }
-                input[j].val = tmpin;
-                if(j>1){
-                    if(input[j-1].val > tmpin){
-                        input[j].peak = 0;
-                        if(i == row){
-                            if(input[j-1].peak == 1){
-                                element* in = (element*) new element(i,j-1);
-                                secqueue.push( *in);
-                                num++;
-                            }
-                        }
-                    }else if(input[j-1].val < tmpin) {
-                        input[j-1].peak = 0;
-                    }else{
-                        if(i == row){
-                            if(input[j-1].peak == 1){
-                                element* in = (element*) new element(i,j-1);
-                                secqueue.push( *in);
-                                num++;
-                            }
+                        if(lastIn[j].type == '0' || lastIn[j].type == 'R'){
+                            lastIn[j].upNode->down = newNode;
+                            newNode->up = lastIn[j].upNode;
+                            
+                            lastIn[j].upNode = newNode;
+                            lastIn[j].type = typeIn;
+                        }else{
+                            lastIn[j].upNode = newNode;
+                            lastIn[j].type = typeIn;
                         }
                     }
+                }else if(typeIn == '1'){
+                    lastIn[j].upNode = NULL;
+                    lastIn[j].type = typeIn;
                 }
-                
+                leftTypeIn = typeIn;
             }
-        }
-
-        if(input[j-1].peak == 1){
-            element* in = (element*) new element(i-1,j-1);
-            secqueue.push( *in);
-            num++;
         }
 
         if(outfile.is_open()){
-            outfile << num << endl;
-            while(!myqueue.empty()){
-                element out = myqueue.front();
-                outfile << out.print_row() << " " << out.print_col() << endl;
-                myqueue.pop();
-            }
-            while(!secqueue.empty()){
-                element out = secqueue.front();
-                outfile << out.print_row() << " " << out.print_col() << endl;
-                secqueue.pop();
-            }
+            //outfile << num << endl;
+            
             outfile.close();
         }else{
             cout << "Unable to open file_out" << endl;
