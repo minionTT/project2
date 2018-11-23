@@ -121,6 +121,20 @@ int main(int argc, char* argv[]){
             }
         }
 
+        if(rootNode.up != NULL){
+            myQueue.push(rootNode.up);
+        }else if(rootNode.down != NULL){
+            myQueue.push(rootNode.down);
+        }else if(rootNode.left != NULL){
+            mwQueue.push(rootNode.left);
+        }else if(rootNode.right != NULL){
+            myQueue.push(rootNode.right);
+        }
+        preNode = rootNode;
+        rootNode.in = TRUE;
+
+        
+
         if(outfile.is_open()){
             //outfile << num << endl;
             
