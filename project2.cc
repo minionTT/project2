@@ -133,7 +133,44 @@ int main(int argc, char* argv[]){
         preNode = rootNode;
         rootNode.in = TRUE;
 
-        
+        while(!myQueue.isEmpty()){
+            node currNode = myQueue.front();
+            myQueue.pop();
+            currNode.back = preNode;
+            if(currNode.up != NULL){
+                if(currNode.up->in == FALSE){
+                    myQueue.push(curuNode.up);
+                    currNode.up->in = TRUE;
+                }else{
+                    currNode.up->down = NULL;
+                    currNode.up = NULL;
+                }   
+            }else if(currNode.down != NULL){
+                if(currNode.down->in == FALSE){
+                    myQueue.push(curuNode.down);
+                    currNode.down->in = TRUE;
+                }else{
+                    currNode.down->up = NULL;
+                    currNode.down = NULL;
+                } 
+            }else if(currNode.left != NULL){
+                if(currNode.left->in == FALSE){
+                    myQueue.push(curuNode.left);
+                    currNode.left->in = TRUE;
+                }else{
+                    currNode.left->right = NULL;
+                    currNode.left = NULL;
+                } 
+            }else if(currNode.right != NULL){
+                if(currNode.right->in == FALSE){
+                    myQueue.push(curuNode.right);
+                    currNode.right->in = TRUE;
+                }else{
+                    currNode.right->left = NULL;
+                    currNode.right = NULL;
+                } 
+            }
+        }
 
         if(outfile.is_open()){
             //outfile << num << endl;
