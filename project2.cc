@@ -79,7 +79,7 @@ int main(int argc, char* argv[]){
     infilename += argv[1];
     outfilename += argv[1];
     infilename += "/floor.data";
-    outfilename += "/Final.path";
+    outfilename += "/final.path";
     fstream infile (infilename);
     ofstream outfile (outfilename);
 
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]){
                         leftNode->rightFin = false;
                         newNode->left = leftNode;
                         newNode->leftFin = false;
-                        cout << "left " << leftNode->num << " new " << newNode->num << endl;
+                        //cout << "left " << leftNode->num << " new " << newNode->num << endl;
                         if(leftTypeIn == 'R'){
                             newNode->R = true;
                         }else if(typeIn == 'R'){
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]){
                             }else if(lastIn[j].type == 'R'){
                                 newNode->R = true;
                             }
-                            cout << "up " << lastIn[j].upNode->num << " new " << newNode->num << endl;
+                            //cout << "up " << lastIn[j].upNode->num << " new " << newNode->num << endl;
                             
                             lastIn[j].upNode = newNode;
                             lastIn[j].type = typeIn;
@@ -159,13 +159,13 @@ int main(int argc, char* argv[]){
                 }
             }
         }
-        cout << "root = " << rootNode->num << endl;
+        //cout << "root = " << rootNode->num << endl;
         if(rootNode->up != NULL){
             outNode = rootNode->up;
             myQueue.push(rootNode->up);
             dir.push(1);
-            cout << "dir push = 1" << endl;
-            cout << "out = " << rootNode->up->num << endl;
+            //cout << "dir push = 1" << endl;
+            //cout << "out = " << rootNode->up->num << endl;
             rootNode->up->in = true;
             rootNode->up->back = rootNode;
             rootNode->up->down = NULL;
@@ -175,8 +175,8 @@ int main(int argc, char* argv[]){
             outNode = rootNode->down;
             myQueue.push(rootNode->down);
             dir.push(2);
-            cout << "dir push = 2" << endl;
-            cout << "out = " << rootNode->down->num << endl;
+            //cout << "dir push = 2" << endl;
+            //cout << "out = " << rootNode->down->num << endl;
             rootNode->down->in = true;
             rootNode->down->back = rootNode;
             rootNode->down->up = NULL;
@@ -186,8 +186,8 @@ int main(int argc, char* argv[]){
             outNode = rootNode->left;
             myQueue.push(rootNode->left);
             dir.push(3);
-            cout << "dir push = 3" << endl;
-            cout << "out = " << rootNode->left->num << endl;
+            //cout << "dir push = 3" << endl;
+            //cout << "out = " << rootNode->left->num << endl;
             rootNode->left->in = true;
             rootNode->left->back = rootNode;
             rootNode->left->right = NULL;
@@ -197,8 +197,8 @@ int main(int argc, char* argv[]){
             outNode = rootNode->right;
             myQueue.push(rootNode->right);
             dir.push(4);
-            cout << "dir push = 4" << endl;
-            cout << "out = " << rootNode->right->num << endl;
+            //cout << "dir push = 4" << endl;
+            //cout << "out = " << rootNode->right->num << endl;
             rootNode->right->in = true;
             rootNode->right->back = rootNode;
             rootNode->right->left = NULL;
@@ -210,19 +210,19 @@ int main(int argc, char* argv[]){
 
         while(!myQueue.empty()){
             currNode = myQueue.front();
-            cout << "creat curr = " << currNode->num << endl;
+            //cout << "creat curr = " << currNode->num << endl;
             myQueue.pop();
             end = true;
             if(currNode->up != NULL){
-                cout << "push up" << endl;
+                //cout << "push up" << endl;
                 if(currNode->up->in == false){
                     myQueue.push(currNode->up);
-                    cout << "creat push = " << currNode->up->num << endl;
+                    //cout << "creat push = " << currNode->up->num << endl;
                     currNode->up->in = true;
                     currNode->up->back = currNode;
                     currNode->up->down = NULL;
                     currNode->up->downFin = true;
-                    cout << "change curr downFin" << currNode->num << endl;
+                    //cout << "change curr downFin" << currNode->num << endl;
                     currNode->up->step = currNode->step + 1;
                     end = false;
                 }else{
@@ -235,7 +235,7 @@ int main(int argc, char* argv[]){
             if(currNode->down != NULL){
                 if(currNode->down->in == false){
                     myQueue.push(currNode->down);
-                    cout << "creat push = " << currNode->down->num << endl;
+                    //cout << "creat push = " << currNode->down->num << endl;
                     currNode->down->in = true;
                     currNode->down->back = currNode;
                     currNode->down->up = NULL;
@@ -252,7 +252,7 @@ int main(int argc, char* argv[]){
             if(currNode->left != NULL){
                 if(currNode->left->in == false){
                     myQueue.push(currNode->left);
-                    cout << "creat push = " << currNode->left->num << endl;
+                    //cout << "creat push = " << currNode->left->num << endl;
                     currNode->left->in = true;
                     currNode->left->back = currNode;
                     currNode->left->right = NULL;
@@ -269,7 +269,7 @@ int main(int argc, char* argv[]){
             if(currNode->right != NULL){
                 if(currNode->right->in == false){
                     myQueue.push(currNode->right);
-                    cout << "creat push = " << currNode->right->num << endl;
+                    //cout << "creat push = " << currNode->right->num << endl;
                     currNode->right->in = true;
                     currNode->right->back = currNode;
                     currNode->right->left = NULL;
@@ -294,10 +294,10 @@ int main(int argc, char* argv[]){
         }
         while(outNode->Fin != true){
             currNode = outNode;
-            cout << "go curr = " << currNode->num << endl;
+            //cout << "go curr = " << currNode->num << endl;
             secQueue.push(currNode->num);
             num++;
-            cout << "num = " << num << endl;
+            //cout << "num = " << num << endl;
             while(currNode->end != true){
                 if(currNode->upFin != true){
                     currNode = currNode->up;
@@ -308,9 +308,9 @@ int main(int argc, char* argv[]){
                         secQueue.push(currNode->num);
                         num++;
                     }
-                    cout << "go curr = " << currNode->num << endl;
+                    //cout << "go curr = " << currNode->num << endl;
                     dir.push(1);
-                    cout << "dir push = 1" << endl;
+                    //cout << "dir push = 1" << endl;
                     num++;
                 }else if(currNode->downFin != true){
                     currNode = currNode->down;
@@ -321,9 +321,9 @@ int main(int argc, char* argv[]){
                         secQueue.push(currNode->num);
                         num++;
                     }
-                    cout << "go curr = " << currNode->num << endl;
+                    //cout << "go curr = " << currNode->num << endl;
                     dir.push(2);
-                    cout << "dir push = 2" << endl;
+                    //cout << "dir push = 2" << endl;
                     num++;
                 }else if(currNode->leftFin != true){
                     currNode = currNode->left;
@@ -334,9 +334,9 @@ int main(int argc, char* argv[]){
                         secQueue.push(currNode->num);
                         num++;
                     }
-                    cout << "go curr = " << currNode->num << endl;
+                    //cout << "go curr = " << currNode->num << endl;
                     dir.push(3);
-                    cout << "dir push = 3" << endl;
+                    //cout << "dir push = 3" << endl;
                     num++;
                 }else if(currNode->rightFin != true){
                     currNode = currNode->right;
@@ -347,29 +347,29 @@ int main(int argc, char* argv[]){
                         secQueue.push(currNode->num);
                         num++;
                     }
-                    cout << "go curr = " << currNode->num << endl;
+                    //cout << "go curr = " << currNode->num << endl;
                     dir.push(4);
-                    cout << "dir push = 4" << endl;
+                    //cout << "dir push = 4" << endl;
                     num++;
                 }
             }
             currNode->Fin = true;
             currNode = currNode->back;
             secQueue.push(currNode->num);
-            cout << "back curr = " << currNode->num << endl;
+            //cout << "back curr = " << currNode->num << endl;
             num++;
             while(currNode != rootNode){
                 direc = dir.top();
-                cout << "direc = " << direc << endl;
+                //cout << "direc = " << direc << endl;
                 dir.pop();
                 if(direc == 1){
                     if(currNode->up->Fin == true){
                         currNode->upFin = true;
                     }
                     currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
-                    cout << "Fin = " << currNode->Fin  << " " << currNode->upFin << " " << currNode->downFin << " " << currNode->leftFin << " " << currNode->rightFin << endl;
+                    //cout << "Fin = " << currNode->Fin  << " " << currNode->upFin << " " << currNode->downFin << " " << currNode->leftFin << " " << currNode->rightFin << endl;
                     currNode = currNode->back;
-                    cout << "back curr = " << currNode->num << " Fin = " << currNode->Fin << endl;
+                    //cout << "back curr = " << currNode->num << " Fin = " << currNode->Fin << endl;
                     secQueue.push(currNode->num);
                     if(currNode != outNode && currNode->R == true){
                         secQueue.push(rootNode->num);
@@ -384,7 +384,7 @@ int main(int argc, char* argv[]){
                     }
                     currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
                     currNode = currNode->back;
-                    cout << "back curr = " << currNode->num << endl;
+                    //cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
                     if(currNode != outNode && currNode->R == true){
                         secQueue.push(rootNode->num);
@@ -399,7 +399,7 @@ int main(int argc, char* argv[]){
                     }
                     currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
                     currNode = currNode->back;
-                    cout << "back curr = " << currNode->num << endl;
+                    //cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
                     if(currNode != outNode && currNode->R == true){
                         secQueue.push(rootNode->num);
@@ -414,7 +414,7 @@ int main(int argc, char* argv[]){
                     }
                     currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
                     currNode = currNode->back;
-                    cout << "back curr = " << currNode->num << endl;
+                    //cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
                     if(currNode != outNode && currNode->R == true){
                         secQueue.push(rootNode->num);
@@ -438,12 +438,12 @@ int main(int argc, char* argv[]){
     
             outfile.close();
         }else{
-            cout << "Unable to open file_out" << endl;
+            //cout << "Unable to open file_out" << endl;
         }
 
         infile.close();
     }else{
-        cout << "Unable to open file_in" << endl;
+        //cout << "Unable to open file_in" << endl;
     }
 
     return 0;
