@@ -24,6 +24,7 @@ class node{
             downFin = true;
             leftFin = true;
             rightFin = true; 
+            R = false;
         }
         node(int in){
             num = in;
@@ -41,6 +42,7 @@ class node{
             downFin = true;
             leftFin = true;
             rightFin = true;  
+            R = false;
         }
         int num;
         int step;
@@ -57,6 +59,7 @@ class node{
         bool downFin;
         bool leftFin;
         bool rightFin;
+        bool R;
 };
 class store{
     public:
@@ -115,6 +118,11 @@ int main(int argc, char* argv[]){
                         newNode->left = leftNode;
                         newNode->leftFin = false;
                         cout << "left " << leftNode->num << " new " << newNode->num << endl;
+                        if(leftTypeIn == 'R'){
+                            newNode->R = true;
+                        }else if(typeIn == 'R'){
+                            leftNode->R = true;
+                        }
                     }
                     leftNode = newNode;                    
                     leftTypeIn = typeIn;
@@ -130,9 +138,11 @@ int main(int argc, char* argv[]){
                             lastIn[j].upNode->downFin = false;
                             newNode->up = lastIn[j].upNode;
                             newNode->upFin = false;
-                            //if(typeIn == 'R'){
-                            //    cout << lastIn[j].upNode->num << endl;
-                            //}
+                            if(typeIn == 'R'){
+                                lastIn[j].upNode->R = true;
+                            }else if(lastIn[j].type == 'R'){
+                                newNode->R = true;
+                            }
                             cout << "up " << lastIn[j].upNode->num << " new " << newNode->num << endl;
                             
                             lastIn[j].upNode = newNode;
@@ -282,7 +292,6 @@ int main(int argc, char* argv[]){
                 currNode->rightFin = true; 
             }
         }
-        secQueue.push(rootNode->num);
         while(outNode->Fin != true){
             currNode = outNode;
             cout << "go curr = " << currNode->num << endl;
@@ -293,6 +302,12 @@ int main(int argc, char* argv[]){
                 if(currNode->upFin != true){
                     currNode = currNode->up;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     cout << "go curr = " << currNode->num << endl;
                     dir.push(1);
                     cout << "dir push = 1" << endl;
@@ -300,6 +315,12 @@ int main(int argc, char* argv[]){
                 }else if(currNode->downFin != true){
                     currNode = currNode->down;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     cout << "go curr = " << currNode->num << endl;
                     dir.push(2);
                     cout << "dir push = 2" << endl;
@@ -307,6 +328,12 @@ int main(int argc, char* argv[]){
                 }else if(currNode->leftFin != true){
                     currNode = currNode->left;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     cout << "go curr = " << currNode->num << endl;
                     dir.push(3);
                     cout << "dir push = 3" << endl;
@@ -314,6 +341,12 @@ int main(int argc, char* argv[]){
                 }else if(currNode->rightFin != true){
                     currNode = currNode->right;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     cout << "go curr = " << currNode->num << endl;
                     dir.push(4);
                     cout << "dir push = 4" << endl;
@@ -338,6 +371,12 @@ int main(int argc, char* argv[]){
                     currNode = currNode->back;
                     cout << "back curr = " << currNode->num << " Fin = " << currNode->Fin << endl;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     num++;
                 }else if(direc == 2){
                     if(currNode->down->Fin == true){
@@ -347,6 +386,12 @@ int main(int argc, char* argv[]){
                     currNode = currNode->back;
                     cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     num++;
                 }else if(direc == 3){
                     if(currNode->left->Fin == true){
@@ -356,6 +401,12 @@ int main(int argc, char* argv[]){
                     currNode = currNode->back;
                     cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     num++;
                 }else if(direc == 4){
                     if(currNode->right->Fin == true){
@@ -365,6 +416,12 @@ int main(int argc, char* argv[]){
                     currNode = currNode->back;
                     cout << "back curr = " << currNode->num << endl;
                     secQueue.push(currNode->num);
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;
+                        secQueue.push(currNode->num);
+                        num++;
+                    }
                     num++;
                 }
             }
