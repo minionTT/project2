@@ -40,7 +40,7 @@ class node{
             upFin = true;
             downFin = true;
             leftFin = true;
-            rightFin = true;     
+            rightFin = true;  
         }
         int num;
         int step;
@@ -312,7 +312,7 @@ int main(int argc, char* argv[]){
                     cout << "dir push = 3" << endl;
                     num++;
                 }else if(currNode->rightFin != true){
-                    currNode = currNode->left;
+                    currNode = currNode->right;
                     secQueue.push(currNode->num);
                     cout << "go curr = " << currNode->num << endl;
                     dir.push(4);
@@ -324,7 +324,6 @@ int main(int argc, char* argv[]){
             currNode = currNode->back;
             secQueue.push(currNode->num);
             cout << "back curr = " << currNode->num << endl;
-            dir.pop();
             num++;
             while(currNode != rootNode){
                 direc = dir.top();
