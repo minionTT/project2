@@ -5,20 +5,22 @@
 #include <stack>
 
 using namespace std;
+void goBack();
+void goClean();
 
 class node{
     public:
         node(){
             num = 0;
             step = 1073741824;
-            rmn = 1073741824;
+            rmn = 0;
             up = NULL;
             down = NULL;
             left = NULL;
             right = NULL;
             back = NULL;
             Fin = false;
-            end = false;
+            End = false;
             in = false;
             upFin = true;
             downFin = true;
@@ -29,14 +31,14 @@ class node{
         node(int in){
             num = in;
             step = 1073741824;
-            rmn = 1073741824;
+            rmn = 0;
             up = NULL;
             down = NULL;
             left = NULL;
             right = NULL;
             back = NULL;
             Fin = false;
-            end = false;
+            End = false;
             in = false;
             upFin = true;
             downFin = true;
@@ -53,7 +55,7 @@ class node{
         node *right;
         node *back;
         bool Fin;
-        bool end;
+        bool End;
         bool in;
         bool upFin;
         bool downFin;
@@ -72,6 +74,28 @@ class store{
         char type;
 };
 
+int row,column;
+    int i,j;
+    char typeIn;
+    int bat;
+    node* leftNode;
+    node* newNode;
+    node* rootNode;
+    node* outNode;
+    node* currNode;
+    char leftTypeIn;
+    bool e;
+    int direc;
+    int step=0;
+    int preRmn;
+    int firstDir;
+    //int input[2][1001];
+    int num=0;
+    
+    queue <node*> myQueue;
+    queue <int> secQueue;
+    stack <int> dir;
+
 int main(int argc, char* argv[]){
 
     string infilename = "./";
@@ -82,26 +106,6 @@ int main(int argc, char* argv[]){
     outfilename += "/final.path";
     fstream infile (infilename);
     ofstream outfile (outfilename);
-
-    int row,column;
-    int i,j;
-    char typeIn;
-    int bat;
-    node* leftNode;
-    node* newNode;
-    node* rootNode;
-    node* outNode;
-    node* currNode;
-    char leftTypeIn;
-    bool end;
-    int direc;
-    int step=0;
-    //int input[2][1001];
-    int num=0;
-    
-    queue <node*> myQueue;
-    queue <int> secQueue;
-    stack <int> dir;
 
     if(infile.is_open()){
         infile >> row >> column >> bat;
@@ -164,7 +168,7 @@ int main(int argc, char* argv[]){
         if(rootNode->up != NULL){
             outNode = rootNode->up;
             myQueue.push(rootNode->up);
-            dir.push(1);
+            firstDir = 1;
             //cout << "dir push = 1" << endl;
             //cout << "out = " << rootNode->up->num << endl;
             rootNode->up->in = true;
@@ -175,7 +179,7 @@ int main(int argc, char* argv[]){
         }else if(rootNode->down != NULL){
             outNode = rootNode->down;
             myQueue.push(rootNode->down);
-            dir.push(2);
+            firstDir = 2;
             //cout << "dir push = 2" << endl;
             //cout << "out = " << rootNode->down->num << endl;
             rootNode->down->in = true;
@@ -186,7 +190,7 @@ int main(int argc, char* argv[]){
         }else if(rootNode->left != NULL){
             outNode = rootNode->left;
             myQueue.push(rootNode->left);
-            dir.push(3);
+            firstDir = 3;
             //cout << "dir push = 3" << endl;
             //cout << "out = " << rootNode->left->num << endl;
             rootNode->left->in = true;
@@ -197,7 +201,7 @@ int main(int argc, char* argv[]){
         }else if(rootNode->right != NULL){
             outNode = rootNode->right;
             myQueue.push(rootNode->right);
-            dir.push(4);
+            firstDir = 4;
             //cout << "dir push = 4" << endl;
             //cout << "out = " << rootNode->right->num << endl;
             rootNode->right->in = true;
@@ -211,9 +215,9 @@ int main(int argc, char* argv[]){
 
         while(!myQueue.empty()){
             currNode = myQueue.front();
-            //cout << "creat curr = " << currNode->num << endl;
+            cout << "creat curr = " << currNode->num << endl;
             myQueue.pop();
-            end = true;
+            e = true;
             if(currNode->up != NULL){
                 //cout << "push up" << endl;
                 if(currNode->up->in == false){
@@ -225,7 +229,7 @@ int main(int argc, char* argv[]){
                     currNode->up->downFin = true;
                     //cout << "change curr downFin" << currNode->num << endl;
                     currNode->up->step = currNode->step + 1;
-                    end = false;
+                    e = false;
                 }else{
                     currNode->up->down = NULL;
                     currNode->up->downFin = true;
@@ -242,7 +246,7 @@ int main(int argc, char* argv[]){
                     currNode->down->up = NULL;
                     currNode->down->upFin = true;
                     currNode->down->step = currNode->step + 1;
-                    end = false;
+                    e = false;
                 }else{
                     currNode->down->up = NULL;
                     currNode->down->upFin = true;
@@ -259,7 +263,7 @@ int main(int argc, char* argv[]){
                     currNode->left->right = NULL;
                     currNode->left->rightFin = true;
                     currNode->left->step = currNode->step + 1;
-                    end = false;
+                    e = false;
                 }else{
                     currNode->left->right = NULL;
                     currNode->left->rightFin = true;
@@ -276,7 +280,7 @@ int main(int argc, char* argv[]){
                     currNode->right->left = NULL;
                     currNode->right->leftFin = true;
                     currNode->right->step = currNode->step + 1;
-                    end = false;
+                    e = false;
                 }else{
                     currNode->right->left = NULL;
                     currNode->right->leftFin = true;
@@ -284,184 +288,56 @@ int main(int argc, char* argv[]){
                     currNode->rightFin = true;
                 } 
             }
-            if(end == true){
-                currNode->end = true;
+            if(e == true){
+                currNode->End = true;
                 currNode->rmn = 0;
                 currNode->upFin = true;
                 currNode->downFin = true;
                 currNode->leftFin = true;
                 currNode->rightFin = true; 
             }
+            while(currNode != rootNode){
+                preRmn = currNode->rmn;
+                currNode = currNode->back;
+                if( (currNode->rmn) < (preRmn + 1) ){
+                    currNode->rmn = preRmn + 1;
+                }
+            }
         }
         while(outNode->Fin != true){
             currNode = outNode;
             //cout << "go curr = " << currNode->num << endl;
             secQueue.push(currNode->num);
+            dir.push(firstDir);
             num++;step++;
             if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
             //cout << "num = " << num << endl;
-            while(currNode->end != true){
-                if(currNode->upFin != true){
-                    currNode = currNode->up;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+            goClean();
+            cout << step << endl;
+            goBack();
+            
+            while( (currNode != rootNode) ){
+                if( (step+(currNode->step)+2*(currNode->back->rmn) ) < bat ){
+                    if(currNode->Fin == true){
+                        goBack();
+                        //cout << "back" << endl;
+                    }else{
+                        goClean();
+                        //cout << "reClean" << endl;
                     }
-                    //cout << "go curr = " << currNode->num << endl;
-                    dir.push(1);
-                    //cout << "dir push = 1" << endl;
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(currNode->downFin != true){
-                    currNode = currNode->down;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    //cout << "go curr = " << currNode->num << endl;
-                    dir.push(2);
-                    //cout << "dir push = 2" << endl;
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(currNode->leftFin != true){
-                    currNode = currNode->left;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    //cout << "go curr = " << currNode->num << endl;
-                    dir.push(3);
-                    //cout << "dir push = 3" << endl;
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(currNode->rightFin != true){
-                    currNode = currNode->right;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    //cout << "go curr = " << currNode->num << endl;
-                    dir.push(4);
-                    //cout << "dir push = 4" << endl;
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                }else{
+                    break;
                 }
+                
             }
-            currNode->Fin = true;
-            currNode = currNode->back;
-            secQueue.push(currNode->num);
-            //cout << "back curr = " << currNode->num << endl;
-            num++;step++;
-            if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+            //cout << "back to root" << endl;
             while(currNode != rootNode){
-                direc = dir.top();
-                //cout << "direc = " << direc << endl;
-                dir.pop();
-                if(direc == 1){
-                    if(currNode->up->Fin == true){
-                        currNode->upFin = true;
-                    }
-                    currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
-                    //cout << "Fin = " << currNode->Fin  << " " << currNode->upFin << " " << currNode->downFin << " " << currNode->leftFin << " " << currNode->rightFin << endl;
-                    currNode = currNode->back;
-                    //cout << "back curr = " << currNode->num << " Fin = " << currNode->Fin << endl;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(direc == 2){
-                    if(currNode->down->Fin == true){
-                        currNode->downFin = true;
-                    }
-                    currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
-                    currNode = currNode->back;
-                    //cout << "back curr = " << currNode->num << endl;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(direc == 3){
-                    if(currNode->left->Fin == true){
-                        currNode->leftFin = true;
-                    }
-                    currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
-                    currNode = currNode->back;
-                    //cout << "back curr = " << currNode->num << endl;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }else if(direc == 4){
-                    if(currNode->right->Fin == true){
-                        currNode->rightFin = true;
-                    }
-                    currNode->Fin = currNode->end | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
-                    currNode = currNode->back;
-                    //cout << "back curr = " << currNode->num << endl;
-                    secQueue.push(currNode->num);
-                    if(currNode != outNode && currNode->R == true){
-                        secQueue.push(rootNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                        step = 0;
-                        secQueue.push(currNode->num);
-                        num++;step++;
-                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                    }
-                    num++;step++;
-                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
-                }
+                goBack();
+                //cout << "back to root" << endl;
             }
             step = 0;
         }
+        //cout << "start output" << endl;
 
         if(outfile.is_open()){
             outfile << num << endl;
@@ -483,4 +359,126 @@ int main(int argc, char* argv[]){
     }
 
     return 0;
+}
+
+void goBack(){
+                currNode = currNode->back;
+                    //cout << "back curr = " << currNode->num << " Fin = " << currNode->Fin << endl;
+                    secQueue.push(currNode->num);
+                    num++;step++;
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                        step = 0;
+                        secQueue.push(currNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    }
+                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                direc = dir.top();
+                //cout << "direc = " << direc << endl;
+                dir.pop();
+                if(direc == 1){
+                    if(currNode->up->Fin == true){
+                        currNode->upFin = true;
+                    }
+                    currNode->Fin = currNode->End | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
+                    //cout << "Fin = " << currNode->Fin  << " " << currNode->upFin << " " << currNode->downFin << " " << currNode->leftFin << " " << currNode->rightFin << endl;
+                    
+                }else if(direc == 2){
+                    if(currNode->down->Fin == true){
+                        currNode->downFin = true;
+                    }
+                    currNode->Fin = currNode->End | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
+                    
+                }else if(direc == 3){
+                    if(currNode->left->Fin == true){
+                        currNode->leftFin = true;
+                    }
+                    currNode->Fin = currNode->End | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
+                    
+                }else if(direc == 4){
+                    if(currNode->right->Fin == true){
+                        currNode->rightFin = true;
+                    }
+                    currNode->Fin = currNode->End | (currNode->upFin & currNode->downFin & currNode->leftFin & currNode->rightFin);
+                    
+                }
+}
+
+void goClean(){
+    while(currNode->End != true){
+                if(currNode->upFin != true){
+                    currNode = currNode->up;
+                    secQueue.push(currNode->num);
+                    //cout << "go curr = " << currNode->num << endl;
+                    dir.push(1);
+                    //cout << "dir push = 1" << endl;
+                    num++;step++;
+                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                        step = 0;
+                        secQueue.push(currNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    }
+                }else if(currNode->downFin != true){
+                    currNode = currNode->down;
+                    secQueue.push(currNode->num);
+                    //cout << "go curr = " << currNode->num << endl;
+                    dir.push(2);
+                    //cout << "dir push = 2" << endl;
+                    num++;step++;
+                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                        step = 0;
+                        secQueue.push(currNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    }
+                }else if(currNode->leftFin != true){
+                    currNode = currNode->left;
+                    secQueue.push(currNode->num);
+                    //cout << "go curr = " << currNode->num << endl;
+                    dir.push(3);
+                    //cout << "dir push = 3" << endl;
+                    num++;step++;
+                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                        step = 0;
+                        secQueue.push(currNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    }
+                }else if(currNode->rightFin != true){
+                    currNode = currNode->right;
+                    secQueue.push(currNode->num);
+                    //cout << "go curr = " << currNode->num << endl;
+                    dir.push(4);
+                    //cout << "dir push = 4" << endl;
+                    num++;step++;
+                    if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    if(currNode != outNode && currNode->R == true){
+                        secQueue.push(rootNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                        step = 0;
+                        secQueue.push(currNode->num);
+                        num++;step++;
+                        if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
+                    }
+                }
+            }
+            
+            currNode->Fin = true;
 }
