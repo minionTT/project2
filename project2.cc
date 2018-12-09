@@ -13,7 +13,7 @@ class node{
         node(){
             num = 0;
             step = 1073741824;
-            rmn = 0;
+            rmn = 1073741824;
             up = NULL;
             down = NULL;
             left = NULL;
@@ -31,7 +31,7 @@ class node{
         node(int in){
             num = in;
             step = 1073741824;
-            rmn = 0;
+            rmn = 1073741824;
             up = NULL;
             down = NULL;
             left = NULL;
@@ -215,7 +215,7 @@ int main(int argc, char* argv[]){
 
         while(!myQueue.empty()){
             currNode = myQueue.front();
-            cout << "creat curr = " << currNode->num << endl;
+            //cout << "creat curr = " << currNode->num << endl;
             myQueue.pop();
             e = true;
             if(currNode->up != NULL){
@@ -295,14 +295,22 @@ int main(int argc, char* argv[]){
                 currNode->downFin = true;
                 currNode->leftFin = true;
                 currNode->rightFin = true; 
-            }
-            while(currNode != rootNode){
-                preRmn = currNode->rmn;
-                currNode = currNode->back;
-                if( (currNode->rmn) < (preRmn + 1) ){
-                    currNode->rmn = preRmn + 1;
+                //cout << currNode->rmn << endl;
+                while(currNode != rootNode){
+                    preRmn = currNode->rmn;
+                    currNode = currNode->back;
+                    //cout << currNode->rmn << " " << preRmn+1 << endl;
+                    if( ((currNode->rmn) < (preRmn + 1)) && ((currNode->rmn)!=1073741824) ){
+                        currNode->rmn = preRmn + 1;
+                        //cout << currNode->num << " " << preRmn + 1 << endl;
+                    }else if( ((currNode->rmn) > (preRmn + 1)) && ((currNode->rmn)==1073741824) ){
+                        currNode->rmn = preRmn + 1;
+                        //cout << currNode->num << " " << preRmn + 1 << endl;
+                    }             
+                    //if(preRmn > (bat/2)) break;
                 }
             }
+            
         }
         while(outNode->Fin != true){
             currNode = outNode;
@@ -313,11 +321,12 @@ int main(int argc, char* argv[]){
             if(step>bat) {cout << "WRONG : step = " << step << " bat = " << bat << endl;}
             //cout << "num = " << num << endl;
             goClean();
-            cout << step << endl;
+            //cout << step << endl;
             goBack();
             
             while( (currNode != rootNode) ){
-                if( (step+(currNode->step)+2*(currNode->back->rmn) ) < bat ){
+                //cout << (step+(currNode->step)+2*(currNode->rmn) ) << " " << bat << " " << step << " " << currNode->step << " " << 2*(currNode->rmn) << endl;
+                if( ( (step+(currNode->step)+2*(currNode->rmn) ) < bat) && ((currNode->rmn) <= (1073741824/2))){
                     if(currNode->Fin == true){
                         goBack();
                         //cout << "back" << endl;
